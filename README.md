@@ -70,7 +70,7 @@ every personal record pushes you up the league table, and every session is a bos
 | Package manager | **pnpm 10** | Faster installs, strict linking |
 | CSS | **Tailwind CSS 3.4** | Custom palette: `dark-bg`, `dark-card`, `neon-green` |
 | HTTP | **fetch API** | Native browser API, no extra dependency |
-| Routing | **Vue Router 4** | Hash-mode SPA (`/tracker`, `/profile`) |
+| Routing | **Vue Router 5** | SPA view switching (`/login`, `/tracker`, `/ranking`) |
 
 ---
 
@@ -133,9 +133,15 @@ gainz/
 └── frontend/                   # Vue 3 SPA
     ├── src/
     │   ├── components/
-    │   │   ├── ExerciseCard.vue # Set tracker card with v-model inputs
-    │   │   └── ProgressBar.vue  # Animated XP progress bar
-    │   ├── App.vue              # Root layout & exercise list
+    │   │   ├── ExerciseCard.vue  # Set tracker card with v-model inputs
+    │   │   └── ProgressBar.vue   # Animated XP progress bar
+    │   ├── views/
+    │   │   ├── LoginView.vue     # Auth screen (placeholder)
+    │   │   ├── TrackerView.vue   # Main workout tracking screen
+    │   │   └── RankingView.vue   # Global league table (placeholder)
+    │   ├── router/
+    │   │   └── index.js          # Vue Router — hash-mode, lazy-loaded routes
+    │   ├── App.vue               # Root container holding <RouterView />
     │   ├── main.js
     │   └── style.css           # Tailwind directives + JetBrains Mono
     ├── tailwind.config.js      # Custom color palette
