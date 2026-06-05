@@ -2,10 +2,10 @@
 
 # ⚡ GainzScore
 
-### _Level up your lifts. Compete in the leagues. Own the platform._
+### _Your Gainz; Your Score_
 
 A mobile-first, gamified gym tracking web application where every kilogram lifted earns XP,
-every personal record pushes you up the league table, and every session is a boss fight against yesterday's numbers.
+every personal record pushes you up the league table.
 
 <br/>
 
@@ -42,11 +42,9 @@ every personal record pushes you up the league table, and every session is a bos
 
 | Feature | Description |
 |---|---|
-| 🎮 **Gamified XP System** | Every completed set awards XP calculated from `Volume × Exercise Multiplier`. Hit thresholds to level up automatically. |
-| 🏆 **League Ranking** | 12-tier league table from **Bronze I** up to **Diamond**, promoted automatically as your total XP grows. |
-| 📱 **Mobile-First UI** | Designed for portrait smartphone screens first. High-contrast Hacker/Gamer aesthetic — neon green on near-black. |
-| ⚡ **Real-Time Tracker** | Dynamic set rows with per-field `v-model` binding. Mark each set complete with a single tap to POST to the API instantly. |
-| 🔌 **Offline Graceful** | If the API is unreachable, the frontend still marks sets locally so training is never interrupted. |
+| 🎮 **Gamified XP System** | Every completed set awards XP calculated from `Volume × Exercise Multiplier`. |
+| 🏆 **League Ranking** | League table from **Bronze** up to **Diamond**, promoted automatically as your total XP grows. |
+| 📱 **Mobile-First UI** | Designed for portrait smartphone screens first. High-contrast aesthetic neon green on near-black. |
 | 🌱 **Zero-Config Database** | SQLite file-based database. No database server required — just run `migrate --seed` and go. |
 
 ---
@@ -60,7 +58,6 @@ every personal record pushes you up the league table, and every session is a bos
 | Framework | **Laravel 13** | API-only mode (no Blade views) |
 | Database | **SQLite** | Local file `backend/database/database.sqlite` |
 | ORM | **Eloquent** | Models: `User`, `Exercise`, `Workout`, `WorkoutSet` |
-| Business Logic | **XpService** | Stateless service class for XP calculation & rank resolution |
 
 ### Frontend
 | Layer | Technology | Notes |
