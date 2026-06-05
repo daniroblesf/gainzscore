@@ -53,7 +53,7 @@ async function completeSet(set, index) {
 
     if (data.xp) emit('xp-gained', data.xp)
   } catch {
-    /* Backend no disponible en modo offline → marca igualmente como guardado */
+    /* Backend unavailable in offline mode → mark as saved anyway */
     set.saved = true
   } finally {
     set.saving = false
@@ -62,10 +62,10 @@ async function completeSet(set, index) {
 
 /* ── Icon label per category ────────────────────────────── */
 const categoryIcon = {
-  Pecho:  '🏋️',
-  Pierna: '🦵',
-  Espalda:'💪',
-  Brazo:  '💪',
+  Chest:  '🏋️',
+  Legs:   '🦵',
+  Back:   '💪',
+  Arms:   '💪',
 }
 </script>
 
@@ -131,7 +131,7 @@ const categoryIcon = {
         <!-- Checkmark button -->
         <button
           :disabled="set.saving || (!set.weight && !set.reps)"
-          :title="set.saved ? 'Set completado' : 'Marcar como completado'"
+          :title="set.saved ? 'Set completed' : 'Mark as completed'"
           class="w-9 h-9 rounded-full flex items-center justify-center border-2 transition-all duration-200
                  focus:outline-none focus:ring-2 focus:ring-neon-green focus:ring-offset-2 focus:ring-offset-dark-card
                  active:scale-90 disabled:opacity-30 disabled:cursor-not-allowed"

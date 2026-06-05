@@ -25,10 +25,10 @@ function onXpGained(xpResult) {
 
 /* ── Exercise list ───────────────────────────────────────── */
 const exercises = ref([
-  { id: 1, name: 'Bankdrücken',  category: 'Pecho'   },
-  { id: 2, name: 'Latziehen',    category: 'Espalda' },
-  { id: 3, name: 'Kniebeugen',   category: 'Pierna'  },
-  { id: 4, name: 'Bizeps Curls', category: 'Brazo'   },
+  { id: 1, name: 'Bankdrücken',  category: 'Chest' },
+  { id: 2, name: 'Latziehen',    category: 'Back'  },
+  { id: 3, name: 'Kniebeugen',   category: 'Legs'  },
+  { id: 4, name: 'Bizeps Curls', category: 'Arms'  },
 ])
 
 const workoutId = ref(1)
@@ -39,7 +39,7 @@ function addExercise() {
     exercises.value.push({
       id:       Date.now(),
       name:     name.trim(),
-      category: 'Otro',
+      category: 'Other',
     })
   }
 }
