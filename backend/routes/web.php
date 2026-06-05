@@ -1,7 +1,4 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-
-Route::get('/', function () {
-    return view('welcome');
-});
+// Web routes are not used in this project.
+// All endpoints are defined in routes/api.php under the /api prefix.

@@ -1,6 +1,6 @@
 <script setup>
 const props = defineProps({
-  rank:       { type: String,  default: 'SILBER I' },
+  rank:       { type: String,  default: 'SILVER I' },
   currentXp:  { type: Number,  default: 65 },
   totalXp:    { type: Number,  default: 1000 },
 })

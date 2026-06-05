@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->integer('current_xp')->default(0);
             $table->integer('level')->default(1);
-            $table->string('rank')->default('BRONCE I');
+            $table->string('rank')->default('BRONZE I');
             $table->rememberToken();
             $table->timestamps();
         });

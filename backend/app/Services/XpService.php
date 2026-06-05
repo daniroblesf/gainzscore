@@ -11,18 +11,18 @@ class XpService
      * League rank thresholds: [minXP, name]
      */
     private const RANKS = [
-        [0,    'BRONCE I'],
-        [500,  'BRONCE II'],
-        [1000, 'BRONCE III'],
-        [2000, 'SILBER I'],
-        [3500, 'SILBER II'],
-        [5000, 'SILBER III'],
-        [7000, 'ORO I'],
-        [9500, 'ORO II'],
-        [12500,'ORO III'],
-        [16000,'PLATINO I'],
-        [20000,'PLATINO II'],
-        [25000,'DIAMANTE'],
+        [0,    'BRONZE I'],
+        [500,  'BRONZE II'],
+        [1000, 'BRONZE III'],
+        [2000, 'SILVER I'],
+        [3500, 'SILVER II'],
+        [5000, 'SILVER III'],
+        [7000, 'GOLD I'],
+        [9500, 'GOLD II'],
+        [12500,'GOLD III'],
+        [16000,'PLATINUM I'],
+        [20000,'PLATINUM II'],
+        [25000,'DIAMOND'],
     ];
 
     /**
