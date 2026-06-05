@@ -10,10 +10,10 @@ class ExerciseSeeder extends Seeder
     public function run(): void
     {
         $exercises = [
-            ['name' => 'Bankdrücken',   'category' => 'Pecho',  'xp_multiplier' => 1.2],
-            ['name' => 'Latziehen',     'category' => 'Espalda','xp_multiplier' => 1.1],
-            ['name' => 'Kniebeugen',    'category' => 'Pierna', 'xp_multiplier' => 1.3],
-            ['name' => 'Bizeps Curls',  'category' => 'Brazo',  'xp_multiplier' => 1.0],
+            ['name' => 'Bankdrücken',   'category' => 'Chest', 'xp_multiplier' => 1.2],
+            ['name' => 'Latziehen',     'category' => 'Back',  'xp_multiplier' => 1.1],
+            ['name' => 'Kniebeugen',    'category' => 'Legs',  'xp_multiplier' => 1.3],
+            ['name' => 'Bizeps Curls',  'category' => 'Arms',  'xp_multiplier' => 1.0],
         ];
 
         foreach ($exercises as $exercise) {
