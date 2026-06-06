@@ -241,20 +241,6 @@ You should see:
 
 > Leave this terminal open too.
 
----
-
-## Step 5 — Open the app in your browser
-
-Open your browser and go to: **http://localhost:5173**
-
-You should see the GainzScore login screen. Use the demo credentials:
-
-| Field | Value |
-|---|---|
-| Email | `demo@gainzscore.app` |
-| Password | `password` |
-
-> **Summary:** You need two terminals open at the same time — one running `php artisan serve` and one running `pnpm dev`. Both must be running for the app to work.
 
 ---
 
