@@ -57,16 +57,25 @@ function posLabel(pos) {
   <div class="max-w-md mx-auto px-4 py-6 space-y-4">
 
     <!-- ── Header ── -->
-    <header class="flex items-center justify-between">
-      <div>
-        <p class="text-[10px] tracking-widest text-white/30 uppercase">League</p>
-        <h1 class="text-xl font-bold leading-none">
-          <span class="text-neon-green">RANK</span><span class="text-white">ING</span>
-        </h1>
-      </div>
-      <div class="text-right">
-        <p class="text-[10px] tracking-widest text-white/30 uppercase">Season 1</p>
-        <p class="text-neon-green text-sm font-bold">Live</p>
+    <header class="space-y-3">
+      <router-link
+        to="/home"
+        class="inline-flex items-center gap-1 text-[10px] tracking-widest text-white/40
+               uppercase hover:text-neon-green transition-colors"
+      >
+        ← Home
+      </router-link>
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-[10px] tracking-widest text-white/30 uppercase">League</p>
+          <h1 class="text-xl font-bold leading-none">
+            <span class="text-neon-green">RANK</span><span class="text-white">ING</span>
+          </h1>
+        </div>
+        <div class="text-right">
+          <p class="text-[10px] tracking-widest text-white/30 uppercase">Season 1</p>
+          <p class="text-neon-green text-sm font-bold">Live</p>
+        </div>
       </div>
     </header>
 

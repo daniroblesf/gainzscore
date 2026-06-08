@@ -50,24 +50,33 @@ function addExercise() {
   <div class="max-w-md mx-auto px-4 py-6 space-y-4">
 
     <!-- ── Header ──────────────────────────────────────── -->
-    <header class="flex items-center justify-between">
-      <div>
-        <p class="text-[10px] tracking-widest text-white/30 uppercase">Training</p>
-        <h1 class="text-xl font-bold leading-none">
-          <span class="text-neon-green">GAINZ</span><span class="text-white">SCORE</span>
-        </h1>
-      </div>
-      <div class="flex items-center gap-3">
-        <RouterLink
-          to="/ranking"
-          class="text-[10px] tracking-widest text-white/40 uppercase border border-white/10
-                 rounded-lg px-2.5 py-1.5 hover:border-neon-green hover:text-neon-green transition-colors"
-        >
-          League
-        </RouterLink>
-        <div class="text-right">
-          <p class="text-neon-green text-sm font-bold tabular-nums">{{ today }}</p>
-          <p class="text-white/30 text-[10px] capitalize">{{ dayName }}</p>
+    <header class="space-y-3">
+      <RouterLink
+        to="/home"
+        class="inline-flex items-center gap-1 text-[10px] tracking-widest text-white/40
+               uppercase hover:text-neon-green transition-colors"
+      >
+        ← Home
+      </RouterLink>
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-[10px] tracking-widest text-white/30 uppercase">Training</p>
+          <h1 class="text-xl font-bold leading-none">
+            <span class="text-neon-green">GAINZ</span><span class="text-white">SCORE</span>
+          </h1>
+        </div>
+        <div class="flex items-center gap-3">
+          <RouterLink
+            to="/ranking"
+            class="text-[10px] tracking-widest text-white/40 uppercase border border-white/10
+                   rounded-lg px-2.5 py-1.5 hover:border-neon-green hover:text-neon-green transition-colors"
+          >
+            League
+          </RouterLink>
+          <div class="text-right">
+            <p class="text-neon-green text-sm font-bold tabular-nums">{{ today }}</p>
+            <p class="text-white/30 text-[10px] capitalize">{{ dayName }}</p>
+          </div>
         </div>
       </div>
     </header>

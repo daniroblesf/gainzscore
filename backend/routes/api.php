@@ -4,7 +4,20 @@ use App\Http\Controllers\Api\ExerciseController;
 use App\Http\Controllers\Api\SetController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\WorkoutController;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+
+// ── Home stats ────────────────────────────────────────────────────────────────
+// GET /api/home-stats → returns total workout count and total XP across all users
+Route::get('/home-stats', function () {
+    $totalWorkouts = DB::table('workouts')->count();
+    $totalXp       = DB::table('users')->sum('current_xp') ?? 0;
+
+    return response()->json([
+        'total_workouts' => $totalWorkouts,
+        'total_xp'       => $totalXp,
+    ]);
+});
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
 // POST /api/login   → receives { email, password }, returns { token, user }
