@@ -1,38 +1,10 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-
-const username      = ref('GainzPlayer')
-const totalWorkouts = ref(0)
-const totalXp       = ref(0)
-const loading       = ref(true)
-
-// Fetch summary stats from the backend to show on the home dashboard.
-// GET /api/home-stats returns: { total_workouts, total_xp }
-async function fetchHomeStats() {
-  try {
-    const res = await fetch('http://localhost:8000/api/home-stats', {
-      headers: { 'Accept': 'application/json' },
-    })
-    if (res.ok) {
-      const data      = await res.json()
-      totalWorkouts.value = data.total_workouts
-      totalXp.value       = data.total_xp
-    }
-  } catch (error) {
-    // Backend unavailable — keep default zeros, app still works offline
-    console.error('Could not load home stats:', error)
-  } finally {
-    loading.value = false
-  }
-}
-
-onMounted(() => {
-  fetchHomeStats()
-})
+const username      = 'GainzPlayer'
+const totalWorkouts = 12
+const totalXp       = 3650
 </script>
 
 <template>
-  <!-- Full-screen gym background with dark overlay -->
   <div
     class="min-h-screen w-full bg-cover bg-center bg-no-repeat"
     style="background-image: linear-gradient(rgba(0,0,0,0.80), rgba(0,0,0,0.93)),
@@ -40,7 +12,6 @@ onMounted(() => {
   >
     <div class="max-w-md mx-auto px-4 py-6 space-y-6 text-white">
 
-      <!-- ── Header ── -->
       <header class="flex items-center justify-between pt-4">
         <div>
           <p class="text-[10px] tracking-widest text-white/30 uppercase">Welcome back</p>
@@ -54,38 +25,28 @@ onMounted(() => {
         </h2>
       </header>
 
-      <!-- ── Stats cards ── -->
       <div class="grid grid-cols-2 gap-4">
 
-        <!-- Workouts -->
         <div class="bg-black/60 backdrop-blur-md border border-white/10 rounded-2xl p-4
                     flex flex-col justify-between h-28 shadow-lg">
           <div>
             <span class="text-lg">🏋️</span>
             <p class="text-[10px] font-bold tracking-widest text-white/40 uppercase mt-1">Workouts</p>
           </div>
-          <p class="text-2xl font-extrabold text-white tabular-nums">
-            <span v-if="loading" class="inline-block w-8 h-6 bg-white/10 rounded animate-pulse" />
-            <span v-else>{{ totalWorkouts }}</span>
-          </p>
+          <p class="text-2xl font-extrabold text-white tabular-nums">{{ totalWorkouts }}</p>
         </div>
 
-        <!-- Total XP -->
         <div class="bg-black/60 backdrop-blur-md border border-white/10 rounded-2xl p-4
                     flex flex-col justify-between h-28 shadow-lg">
           <div>
             <span class="text-lg">🔥</span>
             <p class="text-[10px] font-bold tracking-widest text-white/40 uppercase mt-1">Total XP</p>
           </div>
-          <p class="text-2xl font-extrabold text-neon-green tabular-nums">
-            <span v-if="loading" class="inline-block w-12 h-6 bg-neon-green/10 rounded animate-pulse" />
-            <span v-else>{{ totalXp.toLocaleString() }}</span>
-          </p>
+          <p class="text-2xl font-extrabold text-neon-green tabular-nums">{{ totalXp.toLocaleString() }}</p>
         </div>
 
       </div>
 
-      <!-- ── Navigation buttons ── -->
       <div class="space-y-3 pt-2">
 
         <router-link

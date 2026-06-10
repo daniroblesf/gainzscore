@@ -5,11 +5,9 @@ import { Gem, Shield, Trophy, Medal, Dumbbell } from '@lucide/vue'
 import ProgressBar from '../components/ProgressBar.vue'
 import ExerciseCard from '../components/ExerciseCard.vue'
 
-/* ── Date header ─────────────────────────────────────────── */
 const today   = new Date().toISOString().slice(0, 10)
 const dayName = new Date().toLocaleDateString('de-DE', { weekday: 'long' })
 
-/* ── User XP state (reacts to completed sets) ────────────── */
 const user = ref({
   name:      'GainzPlayer',
   rank:      'SILVER I',
@@ -18,14 +16,6 @@ const user = ref({
   xpForNext: 1000,
 })
 
-function onXpGained(xpResult) {
-  user.value.currentXp = xpResult.current_xp
-  user.value.xpForNext = xpResult.xp_for_next
-  user.value.level     = xpResult.level
-  user.value.rank      = xpResult.rank
-}
-
-/* ── Rank icon config ────────────────────────────────────── */
 function rankIcon(rankName) {
   if (rankName.startsWith('DIAMOND'))  return Gem
   if (rankName.startsWith('PLATINUM')) return Shield
@@ -34,24 +24,17 @@ function rankIcon(rankName) {
   return Dumbbell
 }
 
-/* ── Exercise list ───────────────────────────────────────── */
 const exercises = ref([
-  { id: 1, name: 'Bankdrücken',  category: 'Chest' },
-  { id: 2, name: 'Latziehen',    category: 'Back'  },
-  { id: 3, name: 'Kniebeugen',   category: 'Legs'  },
-  { id: 4, name: 'Bizeps Curls', category: 'Arms'  },
+  { id: 1, name: 'Bankdrücken'  },
+  { id: 2, name: 'Latziehen'    },
+  { id: 3, name: 'Kniebeugen'   },
+  { id: 4, name: 'Bizeps Curls' },
 ])
-
-const workoutId = ref(1)
 
 function addExercise() {
   const name = prompt('Übungsname eingeben:')
   if (name?.trim()) {
-    exercises.value.push({
-      id:       Date.now(),
-      name:     name.trim(),
-      category: 'Other',
-    })
+    exercises.value.push({ id: Date.now(), name: name.trim() })
   }
 }
 </script>
@@ -59,7 +42,6 @@ function addExercise() {
 <template>
   <div class="max-w-md mx-auto px-4 py-6 space-y-4">
 
-    <!-- ── Header ──────────────────────────────────────── -->
     <header class="space-y-3">
       <RouterLink
         to="/home"
@@ -91,7 +73,6 @@ function addExercise() {
       </div>
     </header>
 
-    <!-- ── Level / XP card ─────────────────────────────── -->
     <div class="card">
       <div class="flex items-center justify-between mb-3">
         <div>
@@ -104,30 +85,19 @@ function addExercise() {
         </div>
       </div>
 
-      <ProgressBar
-        :rank="user.rank"
-        :current-xp="user.currentXp"
-        :total-xp="user.xpForNext"
-      />
+      <ProgressBar :current-xp="user.currentXp" :total-xp="user.xpForNext" />
     </div>
 
-    <!-- ── Exercise cards ──────────────────────────────── -->
     <ExerciseCard
       v-for="ex in exercises"
       :key="ex.id"
       :exercise-name="ex.name"
-      :exercise-id="ex.id"
-      :workout-id="workoutId"
-      :category="ex.category"
-      @xp-gained="onXpGained"
     />
 
-    <!-- ── Add exercise CTA ────────────────────────────── -->
     <button
       class="w-full py-4 rounded-2xl bg-neon-green text-dark-bg font-bold text-sm
              tracking-widest uppercase active:scale-95 transition-transform
-             focus:outline-none focus:ring-2 focus:ring-neon-green focus:ring-offset-2
-             focus:ring-offset-dark-bg shadow-[0_0_24px_rgba(34,255,119,0.25)]"
+             shadow-[0_0_24px_rgba(34,255,119,0.25)]"
       @click="addExercise"
     >
       + Übung

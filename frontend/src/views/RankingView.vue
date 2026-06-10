@@ -1,43 +1,14 @@
 <script setup>
-import { ref, onMounted } from 'vue'
 import { Gem, Shield, Trophy, Medal, Dumbbell, Crown, Zap, Flame } from '@lucide/vue'
 
-// ── Ranking data ────────────────────────────────────────────────────────────
-// TODO: Replace this static array with the real backend call:
-//   const res   = await fetch('http://localhost:8000/api/ranking', {
-//     headers: { 'Accept': 'application/json' },
-//   })
-//   const data  = await res.json()
-//   players.value = data.data   // array of players sorted by XP desc
-//
-// Each player returned should have: { pos, name, level, rank, total_xp }
-const players = ref([
-  { pos: 1, name: 'IronBeast',    level: 8, rank: 'DIAMOND',     total_xp: 29800 },
-  { pos: 2, name: 'GoldGunther',  level: 6, rank: 'PLATINUM I',  total_xp: 17100 },
-  { pos: 3, name: 'SilverStreak', level: 5, rank: 'GOLD II',     total_xp: 10400 },
-  { pos: 4, name: 'GainzPlayer',  level: 3, rank: 'SILVER I',    total_xp: 3650  },
-  { pos: 5, name: 'BronzeBull',   level: 2, rank: 'BRONZE III',  total_xp: 1300  },
-])
+const players = [
+  { pos: 1, name: 'IronBeast',    level: 8, rank: 'DIAMOND',    total_xp: 29800 },
+  { pos: 2, name: 'GoldGunther',  level: 6, rank: 'PLATINUM I', total_xp: 17100 },
+  { pos: 3, name: 'SilverStreak', level: 5, rank: 'GOLD II',    total_xp: 10400 },
+  { pos: 4, name: 'GainzPlayer',  level: 3, rank: 'SILVER I',   total_xp: 3650  },
+  { pos: 5, name: 'BronzeBull',   level: 2, rank: 'BRONZE III', total_xp: 1300  },
+]
 
-const loading = ref(false)
-
-// TODO: Uncomment and connect once the backend is ready:
-// onMounted(async () => {
-//   loading.value = true
-//   try {
-//     const res  = await fetch('http://localhost:8000/api/ranking', {
-//       headers: { 'Accept': 'application/json' },
-//     })
-//     const data = await res.json()
-//     players.value = data.data
-//   } catch (e) {
-//     console.error('Could not load ranking:', e)
-//   } finally {
-//     loading.value = false
-//   }
-// })
-
-// ── Rank badge config ────────────────────────────────────────────────────────
 function rankMeta(rankName) {
   if (rankName.startsWith('DIAMOND'))  return { icon: Gem,      color: 'text-cyan-300',   border: 'border-cyan-400/40',   bg: 'bg-cyan-400/10'   }
   if (rankName.startsWith('PLATINUM')) return { icon: Shield,   color: 'text-purple-300', border: 'border-purple-400/40', bg: 'bg-purple-400/10' }
@@ -46,7 +17,6 @@ function rankMeta(rankName) {
   return                                      { icon: Dumbbell, color: 'text-orange-300', border: 'border-orange-400/40', bg: 'bg-orange-400/10' }
 }
 
-// ── Position icon config ─────────────────────────────────────────────────────
 function posIcon(pos) {
   if (pos === 1) return Crown
   if (pos === 2) return Zap
@@ -58,7 +28,6 @@ function posIcon(pos) {
 <template>
   <div class="max-w-md mx-auto px-4 py-6 space-y-4">
 
-    <!-- ── Header ── -->
     <header class="space-y-3">
       <router-link
         to="/home"
@@ -81,23 +50,14 @@ function posIcon(pos) {
       </div>
     </header>
 
-    <!-- ── Loading skeleton ── -->
-    <div v-if="loading" class="space-y-2">
-      <div v-for="i in 5" :key="i"
-           class="bg-dark-card border border-white/5 rounded-2xl h-16 animate-pulse" />
-    </div>
+    <div class="space-y-2">
 
-    <!-- ── Ranking table ── -->
-    <div v-else class="space-y-2">
-
-      <!-- Column labels -->
       <div class="grid grid-cols-[2.5rem_1fr_auto] gap-x-3 px-4 mb-1">
         <span class="text-[9px] tracking-widest text-white/30 uppercase text-center">#</span>
         <span class="text-[9px] tracking-widest text-white/30 uppercase">Player</span>
         <span class="text-[9px] tracking-widest text-white/30 uppercase text-right">Total XP</span>
       </div>
 
-      <!-- Player rows -->
       <div
         v-for="player in players"
         :key="player.pos"
@@ -106,7 +66,6 @@ function posIcon(pos) {
                transition-colors hover:border-white/20"
         :class="player.pos === 1 ? 'border-cyan-400/30 shadow-[0_0_16px_rgba(103,232,249,0.08)]' : ''"
       >
-        <!-- Position -->
         <div class="flex justify-center">
           <component
             v-if="posIcon(player.pos)"
@@ -118,7 +77,6 @@ function posIcon(pos) {
           <span v-else class="text-sm font-bold text-white/30 tabular-nums">#{{ player.pos }}</span>
         </div>
 
-        <!-- Name + rank badge -->
         <div class="min-w-0">
           <p class="text-sm font-bold text-white truncate">{{ player.name }}</p>
           <div class="flex items-center gap-1.5 mt-0.5">
@@ -143,7 +101,6 @@ function posIcon(pos) {
           </div>
         </div>
 
-        <!-- Total XP -->
         <div class="text-right">
           <p class="text-neon-green text-sm font-bold tabular-nums">
             {{ player.total_xp.toLocaleString() }}
@@ -151,9 +108,9 @@ function posIcon(pos) {
           <p class="text-[9px] text-white/30 uppercase tracking-widest">XP</p>
         </div>
       </div>
+
     </div>
 
-    <!-- ── Nav back ── -->
     <router-link
       to="/tracker"
       class="block text-center py-3 rounded-xl border border-dashed border-white/20

@@ -4,7 +4,12 @@ import TrackerView from '../views/TrackerView.vue'
 const routes = [
   {
     path: '/',
-    redirect: '/home',
+    redirect: '/login',
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('../views/LoginView.vue'),
   },
   {
     path: '/home',
