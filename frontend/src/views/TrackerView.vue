@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
+import { Gem, Shield, Trophy, Medal, Dumbbell } from 'lucide-vue-next'
 import ProgressBar from '../components/ProgressBar.vue'
 import ExerciseCard from '../components/ExerciseCard.vue'
 
@@ -22,6 +23,15 @@ function onXpGained(xpResult) {
   user.value.xpForNext = xpResult.xp_for_next
   user.value.level     = xpResult.level
   user.value.rank      = xpResult.rank
+}
+
+/* ── Rank icon config ────────────────────────────────────── */
+function rankIcon(rankName) {
+  if (rankName.startsWith('DIAMOND'))  return Gem
+  if (rankName.startsWith('PLATINUM')) return Shield
+  if (rankName.startsWith('GOLD'))     return Trophy
+  if (rankName.startsWith('SILVER'))   return Medal
+  return Dumbbell
 }
 
 /* ── Exercise list ───────────────────────────────────────── */
@@ -89,7 +99,7 @@ function addExercise() {
           <p class="text-sm font-bold text-white">{{ user.name }}</p>
         </div>
         <div class="flex items-center gap-1.5 bg-neon-green/10 border border-neon-green/30 rounded-lg px-3 py-1.5">
-          <span class="text-base">💎</span>
+          <component :is="rankIcon(user.rank)" class="w-4 h-4 text-neon-green" stroke-width="2.4" />
           <span class="text-neon-green text-xs font-bold tracking-wider">{{ user.rank }}</span>
         </div>
       </div>

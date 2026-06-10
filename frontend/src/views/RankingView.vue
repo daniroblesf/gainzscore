@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import { Gem, Shield, Trophy, Medal, Dumbbell, Crown, Zap, Flame } from 'lucide-vue-next'
 
 // ── Ranking data ────────────────────────────────────────────────────────────
 // TODO: Replace this static array with the real backend call:
@@ -38,18 +39,19 @@ const loading = ref(false)
 
 // ── Rank badge config ────────────────────────────────────────────────────────
 function rankMeta(rankName) {
-  if (rankName.startsWith('DIAMOND'))   return { icon: '💎', color: 'text-cyan-300',   border: 'border-cyan-400/40',   bg: 'bg-cyan-400/10'   }
-  if (rankName.startsWith('PLATINUM'))  return { icon: '🔷', color: 'text-purple-300', border: 'border-purple-400/40', bg: 'bg-purple-400/10' }
-  if (rankName.startsWith('GOLD'))      return { icon: '🥇', color: 'text-yellow-300', border: 'border-yellow-400/40', bg: 'bg-yellow-400/10' }
-  if (rankName.startsWith('SILVER'))    return { icon: '🥈', color: 'text-neon-green',  border: 'border-neon-green/40',  bg: 'bg-neon-green/10'  }
-  return                                       { icon: '🥉', color: 'text-orange-300', border: 'border-orange-400/40', bg: 'bg-orange-400/10' }
+  if (rankName.startsWith('DIAMOND'))  return { icon: Gem,      color: 'text-cyan-300',   border: 'border-cyan-400/40',   bg: 'bg-cyan-400/10'   }
+  if (rankName.startsWith('PLATINUM')) return { icon: Shield,   color: 'text-purple-300', border: 'border-purple-400/40', bg: 'bg-purple-400/10' }
+  if (rankName.startsWith('GOLD'))     return { icon: Trophy,   color: 'text-yellow-300', border: 'border-yellow-400/40', bg: 'bg-yellow-400/10' }
+  if (rankName.startsWith('SILVER'))   return { icon: Medal,    color: 'text-neon-green',  border: 'border-neon-green/40',  bg: 'bg-neon-green/10'  }
+  return                                      { icon: Dumbbell, color: 'text-orange-300', border: 'border-orange-400/40', bg: 'bg-orange-400/10' }
 }
 
-function posLabel(pos) {
-  if (pos === 1) return '🥇'
-  if (pos === 2) return '🥈'
-  if (pos === 3) return '🥉'
-  return `#${pos}`
+// ── Position icon config ─────────────────────────────────────────────────────
+function posIcon(pos) {
+  if (pos === 1) return Crown
+  if (pos === 2) return Zap
+  if (pos === 3) return Flame
+  return null
 }
 </script>
 
@@ -105,16 +107,32 @@ function posLabel(pos) {
         :class="player.pos === 1 ? 'border-cyan-400/30 shadow-[0_0_16px_rgba(103,232,249,0.08)]' : ''"
       >
         <!-- Position -->
-        <span class="text-base font-bold text-center tabular-nums"
-              :class="player.pos <= 3 ? '' : 'text-white/30 text-sm'">
-          {{ posLabel(player.pos) }}
-        </span>
+        <div class="flex justify-center">
+          <component
+            v-if="posIcon(player.pos)"
+            :is="posIcon(player.pos)"
+            class="w-5 h-5"
+            :class="player.pos === 1 ? 'text-yellow-300' : player.pos === 2 ? 'text-cyan-300' : 'text-orange-300'"
+            stroke-width="2.4"
+          />
+          <span v-else class="text-sm font-bold text-white/30 tabular-nums">#{{ player.pos }}</span>
+        </div>
 
         <!-- Name + rank badge -->
         <div class="min-w-0">
           <p class="text-sm font-bold text-white truncate">{{ player.name }}</p>
           <div class="flex items-center gap-1.5 mt-0.5">
-            <span class="text-xs">{{ rankMeta(player.rank).icon }}</span>
+            <span
+              class="w-6 h-6 rounded-lg flex items-center justify-center border"
+              :class="[rankMeta(player.rank).border, rankMeta(player.rank).bg]"
+            >
+              <component
+                :is="rankMeta(player.rank).icon"
+                class="w-3.5 h-3.5"
+                :class="rankMeta(player.rank).color"
+                stroke-width="2.4"
+              />
+            </span>
             <span
               class="text-[10px] font-bold tracking-wider px-1.5 py-0.5 rounded border"
               :class="[rankMeta(player.rank).color, rankMeta(player.rank).border, rankMeta(player.rank).bg]"
