@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
-import { Gem, Shield, Trophy, Medal, Dumbbell } from 'lucide-vue-next'
+import { Gem, Shield, Trophy, Medal, Dumbbell } from '@lucide/vue'
 import ProgressBar from '../components/ProgressBar.vue'
 import ExerciseCard from '../components/ExerciseCard.vue'
 

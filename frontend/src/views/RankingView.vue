@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { Gem, Shield, Trophy, Medal, Dumbbell, Crown, Zap, Flame } from 'lucide-vue-next'
+import { Gem, Shield, Trophy, Medal, Dumbbell, Crown, Zap, Flame } from '@lucide/vue'
 
 // ── Ranking data ────────────────────────────────────────────────────────────
 // TODO: Replace this static array with the real backend call:
