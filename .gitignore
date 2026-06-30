@@ -1,1 +1,73 @@
+# ────────────────────────────────────────────────────────────────────────────
+#  GainzScore — root .gitignore
+#  Covers both /backend (Laravel) and /frontend (Vue / Vite / pnpm)
+# ────────────────────────────────────────────────────────────────────────────
+
+
+# ── Dependencies ─────────────────────────────────────────────────────────────
+# Match node_modules at any depth (root, frontend, or any future sub-package)
+node_modules/
+backend/vendor/
 .pnpm-store/
+
+
+# ── Environment & Secrets ─────────────────────────────────────────────────────
+# Keep .env.example in source control; ignore every real env file.
+.env
+.env.*
+!.env.example
+backend/storage/*.key
+backend/auth.json
+
+
+# ── Frontend Build Artifacts ──────────────────────────────────────────────────
+frontend/dist/
+frontend/dist-ssr/
+*.local
+
+
+# ── Laravel Runtime & Cache ───────────────────────────────────────────────────
+backend/bootstrap/cache/*.php
+backend/public/build/
+backend/public/hot/
+backend/public/storage/
+backend/public/fonts-manifest.dev.json
+backend/storage/logs/
+backend/storage/pail/
+backend/storage/framework/cache/
+backend/storage/framework/sessions/
+backend/storage/framework/testing/
+backend/storage/framework/views/
+backend/.phpunit.result.cache
+backend/.phpunit.cache/
+backend/_ide_helper.php
+backend/Homestead.json
+backend/Homestead.yaml
+
+
+# ── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+
+# ── OS Files ─────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+
+# ── Editor & IDE ─────────────────────────────────────────────────────────────
+.idea/
+.vscode/
+.cursor/
+.nova/
+.zed/
+.codex/
+.phpactor.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

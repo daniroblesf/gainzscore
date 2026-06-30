@@ -10,10 +10,8 @@ class ExerciseController extends Controller
 {
     public function index(): JsonResponse
     {
-        $exercises = Exercise::orderBy('category')->orderBy('name')->get();
-
-        return response()->json([
-            'data' => $exercises,
-        ]);
+        return response()->json(
+            Exercise::orderBy('category')->orderBy('name')->get()
+        );
     }
 }

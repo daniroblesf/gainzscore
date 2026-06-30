@@ -4,6 +4,7 @@ import { RouterLink } from 'vue-router'
 import { Gem, Shield, Trophy, Medal, Dumbbell } from '@lucide/vue'
 import ProgressBar from '../components/ProgressBar.vue'
 import ExerciseCard from '../components/ExerciseCard.vue'
+import ExerciseSelectorModal from '../components/ExerciseSelectorModal.vue'
 
 const today   = new Date().toISOString().slice(0, 10)
 const dayName = new Date().toLocaleDateString('de-DE', { weekday: 'long' })
@@ -24,18 +25,18 @@ function rankIcon(rankName) {
   return Dumbbell
 }
 
-const exercises = ref([
-  { id: 1, name: 'Bankdrücken'  },
-  { id: 2, name: 'Latziehen'    },
-  { id: 3, name: 'Kniebeugen'   },
-  { id: 4, name: 'Bizeps Curls' },
-])
+const exercises = ref([])
 
-function addExercise() {
-  const name = prompt('Übungsname eingeben:')
-  if (name?.trim()) {
-    exercises.value.push({ id: Date.now(), name: name.trim() })
-  }
+const isModalOpen = ref(false)
+
+function addExerciseToWorkout(exercise) {
+  exercises.value.push({
+    id:    exercise.id,
+    name:  exercise.name,
+    image: exercise.image,
+    sets:  [{ set_number: 1, kg: 0, reps: 0, completed: false }],
+  })
+  isModalOpen.value = false
 }
 </script>
 
@@ -88,20 +89,37 @@ function addExercise() {
       <ProgressBar :current-xp="user.currentXp" :total-xp="user.xpForNext" />
     </div>
 
+    <!-- Empty state -->
+    <div
+      v-if="exercises.length === 0"
+      class="py-12 flex flex-col items-center gap-2 text-center"
+    >
+      <p class="text-[10px] tracking-widest uppercase text-white/20">Noch keine Übungen</p>
+      <p class="text-[10px] tracking-widest uppercase text-white/10">Tippe auf + Übung</p>
+    </div>
+
     <ExerciseCard
       v-for="ex in exercises"
       :key="ex.id"
       :exercise-name="ex.name"
+      :exercise-image="ex.image"
     />
 
     <button
       class="w-full py-4 rounded-2xl bg-neon-green text-dark-bg font-bold text-sm
              tracking-widest uppercase active:scale-95 transition-transform
              shadow-[0_0_24px_rgba(34,255,119,0.25)]"
-      @click="addExercise"
+      @click="isModalOpen = true"
     >
       + Übung
     </button>
 
   </div>
+
+  <!-- Modal de selección de ejercicios -->
+  <ExerciseSelectorModal
+    v-if="isModalOpen"
+    @select="addExerciseToWorkout"
+    @close="isModalOpen = false"
+  />
 </template>

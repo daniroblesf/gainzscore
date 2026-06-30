@@ -1,0 +1,11 @@
+{
+  "name": "gainzscore",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "concurrently --kill-others --names \"backend,frontend\" --prefix-colors \"blue,green\" \"cd backend && php artisan serve\" \"pnpm --prefix frontend dev\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  }
+}

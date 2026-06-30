@@ -1,9 +1,12 @@
 <script setup>
 import { ref } from 'vue'
+import { getExerciseImage } from '../utils/imageUrl'
 
 const props = defineProps({
-  exerciseName: { type: String, required: true },
+  exerciseName:  { type: String, required: true },
+  exerciseImage: { type: String, default: null },
 })
+
 
 const sets = ref([
   { id: 1, weight: '', reps: '', saved: false },
@@ -22,9 +25,19 @@ function completeSet(set) {
 
 <template>
   <div class="card">
-    <h2 class="text-base font-bold tracking-wide uppercase text-white mb-4">
-      💪 {{ exerciseName }}
-    </h2>
+    <div class="flex items-center mb-4">
+      <div class="w-10 h-10 rounded-full overflow-hidden bg-white/5 flex-shrink-0 mr-4 border border-white/10 flex items-center justify-center">
+        <img
+          :src="getExerciseImage({ name: exerciseName, image: exerciseImage })"
+          :alt="exerciseName"
+          class="w-full h-full object-cover"
+          @error="(e) => e.target.style.display = 'none'"
+        />
+      </div>
+      <h2 class="text-base font-bold tracking-wide uppercase text-white">
+        {{ exerciseName }}
+      </h2>
+    </div>
 
     <div class="grid grid-cols-[2rem_1fr_1fr_2.5rem] gap-x-2 mb-1 px-1">
       <span class="text-[10px] font-bold tracking-widest text-white/40 uppercase text-center">SATZ</span>
