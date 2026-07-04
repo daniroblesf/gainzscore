@@ -1,4 +1,9 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
+
+import HomeView from '../views/HomeView.vue'
+import LoginView from '../views/LoginView.vue'
+import RankingView from '../views/RankingView.vue'
+import ResultsView from '../views/ResultsView.vue'
 import TrackerView from '../views/TrackerView.vue'
 
 const routes = [
@@ -9,12 +14,12 @@ const routes = [
   {
     path: '/login',
     name: 'login',
-    component: () => import('../views/LoginView.vue'),
+    component: LoginView,
   },
   {
     path: '/home',
     name: 'home',
-    component: () => import('../views/HomeView.vue'),
+    component: HomeView,
   },
   {
     path: '/tracker',
@@ -24,12 +29,21 @@ const routes = [
   {
     path: '/ranking',
     name: 'ranking',
-    component: () => import('../views/RankingView.vue'),
+    component: RankingView,
+  },
+  {
+    path: '/results',
+    name: 'results',
+    component: ResultsView,
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/login',
   },
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes,
 })
 
