@@ -15,3 +15,58 @@
   ::-webkit-scrollbar-track { @apply bg-dark-card; }
   ::-webkit-scrollbar-thumb { @apply bg-neon-green rounded-full; }
 }
+
+@layer components {
+  .page-shell {
+    @apply w-full max-w-md mx-auto px-4 py-6 space-y-4;
+  }
+
+  .card {
+    @apply bg-black/60 backdrop-blur-md border border-white/10 rounded-2xl p-4 shadow-lg;
+    box-shadow: 0 18px 55px rgba(0, 0, 0, 0.32);
+  }
+
+  .input-field {
+    @apply w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 font-mono transition-colors;
+    @apply focus:outline-none focus:border-neon-green focus:ring-1 focus:ring-neon-green disabled:opacity-50;
+  }
+
+  .primary-action {
+    @apply w-full py-4 rounded-2xl bg-neon-green text-dark-bg font-bold text-sm tracking-widest uppercase transition-all;
+    @apply active:scale-95 disabled:opacity-60 disabled:cursor-wait;
+    box-shadow: 0 0 24px rgba(34, 255, 119, 0.3);
+  }
+
+  .primary-action:hover:not(:disabled) {
+    box-shadow: 0 0 36px rgba(34, 255, 119, 0.45);
+  }
+
+  .secondary-action {
+    @apply w-full py-4 rounded-2xl bg-black/45 backdrop-blur-md border border-white/10 text-white font-bold text-center text-sm tracking-widest uppercase transition-all;
+    @apply active:scale-95 hover:border-neon-green/50 hover:text-neon-green;
+  }
+
+  .app-background {
+    position: relative;
+    isolation: isolate;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(34, 255, 119, 0.14), transparent 32rem),
+      linear-gradient(rgba(0, 0, 0, 0.78), rgba(0, 0, 0, 0.95)),
+      url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1600&auto=format&fit=crop');
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .app-background::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      linear-gradient(90deg, rgba(5, 11, 7, 0.7), transparent 28%, transparent 72%, rgba(5, 11, 7, 0.75)),
+      rgba(5, 11, 7, 0.22);
+  }
+}
