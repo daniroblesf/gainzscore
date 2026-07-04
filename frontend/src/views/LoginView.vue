@@ -1,29 +1,52 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { API_BASE_URL, storeSession } from '../utils/api'
 
 const router = useRouter()
+const mode = ref('login')
+const name = ref('')
 const email = ref('')
 const password = ref('')
 const errorMessage = ref('')
 const isLoading = ref(false)
 
-async function handleLogin() {
+const isRegisterMode = computed(() => mode.value === 'register')
+const formTitle = computed(() => isRegisterMode.value ? 'Create your account' : 'Sign in to continue')
+const submitLabel = computed(() => {
+  if (isLoading.value) return 'Bitte warten'
+  return isRegisterMode.value ? 'Registrieren' : 'Login'
+})
+
+function switchMode(nextMode) {
+  mode.value = nextMode
+  errorMessage.value = ''
+}
+
+async function handleSubmit() {
   errorMessage.value = ''
   isLoading.value = true
 
+  const endpoint = isRegisterMode.value ? 'register' : 'login'
+  const payload = isRegisterMode.value
+    ? {
+        name: name.value,
+        email: email.value,
+        password: password.value,
+      }
+    : {
+        email: email.value,
+        password: password.value,
+      }
+
   try {
-    const response = await fetch(`${API_BASE_URL}/login`, {
+    const response = await fetch(`${API_BASE_URL}/${endpoint}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
       },
-      body: JSON.stringify({
-        email: email.value,
-        password: password.value,
-      }),
+      body: JSON.stringify(payload),
     })
 
     if (response.status === 401) {
@@ -31,8 +54,17 @@ async function handleLogin() {
       return
     }
 
+    if (response.status === 422) {
+      const data = await response.json()
+      const firstError = data.errors ? Object.values(data.errors)[0]?.[0] : null
+      errorMessage.value = firstError || 'Bitte pruefe deine Eingaben.'
+      return
+    }
+
     if (!response.ok) {
-      errorMessage.value = 'Serverfehler beim Login.'
+      errorMessage.value = isRegisterMode.value
+        ? 'Registrierung fehlgeschlagen.'
+        : 'Serverfehler beim Login.'
       return
     }
 
@@ -58,12 +90,55 @@ async function handleLogin() {
       </div>
 
       <div class="card p-6 space-y-5">
-        <div class="space-y-1">
-          <p class="text-[10px] tracking-widest text-white/30 uppercase">Welcome back</p>
-          <h2 class="text-lg font-bold leading-none text-white">Sign in to continue</h2>
+        <div class="grid grid-cols-2 gap-2 rounded-xl bg-white/5 p-1 border border-white/10">
+          <button
+            type="button"
+            class="py-2 rounded-lg text-xs font-bold tracking-widest uppercase transition-colors"
+            :class="!isRegisterMode ? 'bg-neon-green text-dark-bg' : 'text-white/40 hover:text-white'"
+            @click="switchMode('login')"
+          >
+            Login
+          </button>
+          <button
+            type="button"
+            class="py-2 rounded-lg text-xs font-bold tracking-widest uppercase transition-colors"
+            :class="isRegisterMode ? 'bg-neon-green text-dark-bg' : 'text-white/40 hover:text-white'"
+            @click="switchMode('register')"
+          >
+            Register
+          </button>
         </div>
 
-        <form class="space-y-4" @submit.prevent="handleLogin">
+        <div class="space-y-1">
+          <p class="text-[10px] tracking-widest text-white/30 uppercase">
+            {{ isRegisterMode ? 'New player' : 'Welcome back' }}
+          </p>
+          <h2 class="text-lg font-bold leading-none text-white">
+            {{ formTitle }}
+          </h2>
+        </div>
+
+        <form class="space-y-4" @submit.prevent="handleSubmit">
+          <div v-if="isRegisterMode" class="space-y-1.5">
+            <label
+              for="name"
+              class="block text-[10px] tracking-widest text-white/40 uppercase font-bold"
+            >
+              Name
+            </label>
+            <input
+              id="name"
+              v-model="name"
+              type="text"
+              autocomplete="name"
+              required
+              minlength="2"
+              maxlength="30"
+              placeholder="GainzPlayer"
+              class="input-field"
+            />
+          </div>
+
           <div class="space-y-1.5">
             <label
               for="email"
@@ -93,8 +168,9 @@ async function handleLogin() {
               id="password"
               v-model="password"
               type="password"
-              autocomplete="current-password"
+              :autocomplete="isRegisterMode ? 'new-password' : 'current-password'"
               required
+              minlength="6"
               placeholder="password"
               class="input-field"
             />
@@ -105,7 +181,7 @@ async function handleLogin() {
             :disabled="isLoading"
             class="primary-action"
           >
-            {{ isLoading ? 'Bitte warten' : 'Login' }}
+            {{ submitLabel }}
           </button>
 
           <p

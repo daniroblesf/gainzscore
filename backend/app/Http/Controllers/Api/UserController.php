@@ -97,6 +97,67 @@ class UserController extends Controller
     }
 
     /**
+     * POST /api/register
+     * Creates a new demo user account and returns their session data.
+     *
+     * Expected body: { "name": "...", "email": "...", "password": "..." }
+     */
+    public function register(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'min:2', 'max:30'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'password' => ['required', 'string', 'min:6', 'max:100'],
+        ]);
+
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'current_xp' => 0,
+            'level' => 1,
+            'rank' => 'BRONZE I',
+        ]);
+
+        return response()->json([
+            'token' => 'demo-mock-token-' . $user->id,
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'level' => $user->level,
+                'rank' => $user->rank,
+                'current_xp' => $user->current_xp,
+                'xp_for_next' => $this->xpService->xpForNextLevel($user->level),
+            ],
+        ], 201);
+    }
+
+    /**
+     * DELETE /api/users/{id}
+     * Deletes a user account after password confirmation.
+     */
+    public function destroy(Request $request, int $id): JsonResponse
+    {
+        $validated = $request->validate([
+            'password' => ['required', 'string'],
+        ]);
+
+        $user = User::findOrFail($id);
+
+        if (! Hash::check($validated['password'], $user->password)) {
+            return response()->json([
+                'message' => 'Invalid password.',
+            ], 401);
+        }
+
+        $user->delete();
+
+        return response()->json([
+            'message' => 'Account deleted.',
+        ]);
+    }
+
+    /**
      * GET /api/ranking
      * Returns the global leaderboard sorted by total accumulated XP.
      */
