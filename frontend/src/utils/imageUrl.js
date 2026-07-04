@@ -15,6 +15,8 @@ const NAME_TO_FILE = {
   'ausfallschritte':           'lunges.png',
 }
 
+const CUSTOM_EXERCISE_IMAGE = '/GainzScore Mini-Logo.png'
+
 /**
  * Returns the local public path for an exercise image.
  * The DB already stores the correct path (e.g. "/exercises/bench-press.png"),
@@ -28,5 +30,15 @@ export function getExerciseImage(exercise) {
 
   const key      = exercise.name?.toLowerCase().trim()
   const filename = NAME_TO_FILE[key]
-  return filename ? `/exercises/${filename}` : null
+  if (filename) return `/exercises/${filename}`
+
+  if (exercise.category?.toLowerCase().trim() === 'custom') {
+    return CUSTOM_EXERCISE_IMAGE
+  }
+
+  if (exercise.user_id) {
+    return CUSTOM_EXERCISE_IMAGE
+  }
+
+  return null
 }

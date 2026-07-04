@@ -19,3 +19,8 @@ export function storeSession({ token, user }) {
   localStorage.setItem('gainzscore_token', token)
   localStorage.setItem('gainzscore_user', JSON.stringify(user))
 }
+
+export function clearSession() {
+  localStorage.removeItem('gainzscore_token')
+  localStorage.removeItem('gainzscore_user')
+}
