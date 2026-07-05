@@ -18,6 +18,14 @@ Route::get('/home-stats', function () {
 });
 
 Route::post('/login', [UserController::class, 'login']);
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::post('/logout', [UserController::class, 'logout']);
+
+    Route::get('/users/{id}', [UserController::class, 'show']);
+
+});
+
 Route::post('/register', [UserController::class, 'register']);
 Route::delete('/users/{id}', [UserController::class, 'destroy']);
 
@@ -30,7 +38,7 @@ Route::post('/workouts/finish', [WorkoutController::class, 'finish']);
 
 Route::post('/sets/log', [SetController::class, 'log']);
 
-Route::get('/users/{id}', [UserController::class, 'show']);
+
 Route::get('/users/{id}/workouts', [WorkoutController::class, 'indexForUser']);
 
 Route::get('/ranking', [UserController::class, 'ranking']);

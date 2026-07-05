@@ -36,7 +36,16 @@ const categoryOptions = ['Chest', 'Back', 'Arms', 'Legs', 'Shoulders', 'Core', '
 
 onMounted(async () => {
   try {
-    const response = await fetch(`${API_BASE_URL}/exercises?user_id=${props.userId}`)
+    const response = await fetch(
+      `${API_BASE_URL}/exercises?user_id=${props.userId}`,
+      {
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('gainzscore_token')}`,
+        },
+      }
+    )
+
     exercises.value = await response.json()
   } finally {
     isLoading.value = false
@@ -123,9 +132,10 @@ async function createCustomExercise() {
     const response = await fetch(`${API_BASE_URL}/exercises`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
+  'Content-Type': 'application/json',
+  Accept: 'application/json',
+  Authorization: `Bearer ${localStorage.getItem('gainzscore_token')}`,
+},
       body: JSON.stringify({
         user_id: props.userId,
         name: customName.value.trim(),
@@ -163,6 +173,7 @@ async function deleteCustomExercise(exercise) {
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('gainzscore_token')}`,
       },
       body: JSON.stringify({
         user_id: props.userId,

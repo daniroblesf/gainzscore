@@ -84,7 +84,12 @@ function logout() {
 
 async function loadWorkoutStatus() {
   try {
-    const response = await fetch(`${API_BASE_URL}/users/${user.value.id}/workouts`)
+    const response = await fetch(`${API_BASE_URL}/users/${user.value.id}/workouts`, {
+  headers: {
+    Accept: 'application/json',
+    Authorization: `Bearer ${localStorage.getItem('gainzscore_token')}`,
+  },
+})
 
     if (!response.ok) {
       throw new Error('Workouts konnten nicht geladen werden.')
@@ -173,14 +178,14 @@ async function finishWorkout() {
 
   try {
     const response = await fetch(`${API_BASE_URL}/workouts/finish`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: JSON.stringify(payload),
-    })
-
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+    Authorization: `Bearer ${localStorage.getItem('gainzscore_token')}`,
+  },
+  body: JSON.stringify(payload),
+})
     if (!response.ok) {
       throw new Error('Workout konnte nicht gespeichert werden.')
     }

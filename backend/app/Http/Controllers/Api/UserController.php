@@ -83,18 +83,28 @@ class UserController extends Controller
             ], 401);
         }
 
-        return response()->json([
-            'token' => 'demo-mock-token-' . $user->id,
-            'user'  => [
-                'id'          => $user->id,
-                'name'        => $user->name,
-                'level'       => $user->level,
-                'rank'        => $user->rank,
-                'current_xp'  => $user->current_xp,
-                'xp_for_next' => $this->xpService->xpForNextLevel($user->level),
-            ],
-        ]);
+        $token = $user->createToken('gainzscore-app')->plainTextToken;
+
+return response()->json([
+    'token' => $token,
+    'user' => [
+        'id' => $user->id,
+        'name' => $user->name,
+        'level' => $user->level,
+        'rank' => $user->rank,
+        'current_xp' => $user->current_xp,
+        'xp_for_next' => $this->xpService->xpForNextLevel($user->level),
+    ],
+]);
     }
+    public function logout(Request $request): JsonResponse
+{
+    $request->user()->currentAccessToken()?->delete();
+
+    return response()->json([
+        'message' => 'Logged out successfully.',
+    ]);
+}
 
     /**
      * POST /api/register

@@ -43,7 +43,12 @@ async function loadUsers() {
   isLoadingUsers.value = true
 
   try {
-    const response = await fetch(`${API_BASE_URL}/ranking`)
+    const response = await fetch(`${API_BASE_URL}/ranking`, {
+  headers: {
+    Accept: 'application/json',
+    Authorization: `Bearer ${localStorage.getItem('gainzscore_token')}`,
+  },
+})
 
     if (!response.ok) {
       throw new Error('Benutzer konnten nicht geladen werden.')
@@ -68,7 +73,12 @@ async function loadWorkouts(userId = selectedUser.value.id) {
   errorMessage.value = ''
 
   try {
-    const response = await fetch(`${API_BASE_URL}/users/${userId}/workouts`)
+    const response = await fetch(`${API_BASE_URL}/users/${userId}/workouts`, {
+  headers: {
+    Accept: 'application/json',
+    Authorization: `Bearer ${localStorage.getItem('gainzscore_token')}`,
+  },
+})
 
     if (!response.ok) {
       throw new Error('Leistungen konnten nicht geladen werden.')
