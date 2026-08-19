@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Models\Workout;
 use App\Services\XpService;
 use Illuminate\Http\JsonResponse;
@@ -16,15 +15,15 @@ class WorkoutController extends Controller
     {
     }
 
+    /** POST /api/workouts/start — open a new workout for the authenticated user. */
     public function start(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'date'    => 'sometimes|date',
+            'date' => 'sometimes|date',
         ]);
 
         $workout = Workout::create([
-            'user_id' => $validated['user_id'],
+            'user_id' => $request->user()->id,
             'date'    => $validated['date'] ?? now()->toDateString(),
         ]);
 
@@ -34,68 +33,75 @@ class WorkoutController extends Controller
         ], 201);
     }
 
+    /** POST /api/workouts/finish — persist a completed workout and award XP. */
     public function finish(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'user_id' => ['required', 'integer', 'exists:users,id'],
-            'date' => ['required', 'date'],
-
-            'exercises' => ['required', 'array', 'min:1'],
-            'exercises.*.exercise_id' => ['required', 'integer', 'exists:exercises,id'],
-
-            'exercises.*.sets' => ['required', 'array', 'min:1', 'max:12'],
-            'exercises.*.sets.*.set_number' => ['required', 'integer', 'min:1', 'max:12'],
-            'exercises.*.sets.*.kg' => ['required', 'numeric', 'min:1', 'max:500'],
-            'exercises.*.sets.*.reps' => ['required', 'integer', 'min:1', 'max:100'],
-            'exercises.*.sets.*.completed' => ['required', 'accepted'],
+            'date'                            => ['required', 'date'],
+            'exercises'                       => ['required', 'array', 'min:1'],
+            'exercises.*.exercise_id'         => ['required', 'integer', 'exists:exercises,id'],
+            'exercises.*.sets'                => ['required', 'array', 'min:1', 'max:12'],
+            'exercises.*.sets.*.set_number'   => ['required', 'integer', 'min:1', 'max:12'],
+            'exercises.*.sets.*.kg'           => ['required', 'numeric', 'min:1', 'max:500'],
+            'exercises.*.sets.*.reps'         => ['required', 'integer', 'min:1', 'max:100'],
+            'exercises.*.sets.*.completed'    => ['required', 'accepted'],
         ]);
 
+        $userId   = $request->user()->id;
         $xpGained = 0;
 
-        $workoutId = DB::transaction(function () use ($validated, &$xpGained) {
+        $workoutId = DB::transaction(function () use ($validated, $userId, &$xpGained) {
             $workoutId = DB::table('workouts')->insertGetId([
-                'user_id' => $validated['user_id'],
-                'date' => $validated['date'],
+                'user_id'    => $userId,
+                'date'       => $validated['date'],
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
 
             foreach ($validated['exercises'] as $exercise) {
-                $exerciseMultiplier = (float) DB::table('exercises')
+                $multiplier = (float) DB::table('exercises')
                     ->where('id', $exercise['exercise_id'])
-                    ->value('xp_multiplier');
+                    ->value('xp_multiplier') ?: 1.0;
 
                 foreach ($exercise['sets'] as $set) {
                     DB::table('workout_sets')->insert([
-                        'workout_id' => $workoutId,
-                        'exercise_id' => $exercise['exercise_id'],
-                        'set_number' => $set['set_number'],
-                        'weight' => $set['kg'],
-                        'reps' => $set['reps'],
+                        'workout_id'   => $workoutId,
+                        'exercise_id'  => $exercise['exercise_id'],
+                        'set_number'   => $set['set_number'],
+                        'weight'       => $set['kg'],
+                        'reps'         => $set['reps'],
                         'is_completed' => true,
-                        'created_at' => now(),
-                        'updated_at' => now(),
+                        'created_at'   => now(),
+                        'updated_at'   => now(),
                     ]);
 
-                    $xpGained += (int) round($set['kg'] * $set['reps'] * ($exerciseMultiplier ?: 1.0));
+                    $xpGained += (int) round($set['kg'] * $set['reps'] * $multiplier);
                 }
             }
 
             return $workoutId;
         });
 
-        $user = User::findOrFail($validated['user_id']);
-        $xpResult = $this->xpService->awardXp($user, $xpGained);
+        $user      = $request->user();
+        $xpResult  = $this->xpService->awardXp($user, $xpGained);
 
         return response()->json([
-            'message' => 'Workout saved successfully',
+            'message'    => 'Workout saved successfully',
             'workout_id' => $workoutId,
-            'xp' => $xpResult,
+            'xp'         => $xpResult,
         ], 201);
     }
 
-    public function indexForUser(int $id): JsonResponse
+    /**
+     * GET /api/users/{id}/workouts — history for the authenticated user.
+     * Enforces that users can only view their own workout history.
+     */
+    public function indexForUser(Request $request, int $id): JsonResponse
     {
+        if ($request->user()->id !== $id) {
+            return response()->json(['message' => 'Forbidden.'], 403);
+        }
+
         $workouts = DB::table('workouts')
             ->where('user_id', $id)
             ->orderByDesc('date')
@@ -127,30 +133,28 @@ class WorkoutController extends Controller
 
                     return [
                         'exercise_id' => $first->exercise_id,
-                        'name' => $first->exercise_name,
-                        'image' => $first->exercise_image,
-                        'sets' => $exerciseSets->map(function ($set) {
-                            return [
-                                'id' => $set->id,
-                                'set_number' => $set->set_number,
-                                'weight' => $set->weight,
-                                'reps' => $set->reps,
-                                'is_completed' => (bool) $set->is_completed,
-                            ];
-                        })->values(),
+                        'name'        => $first->exercise_name,
+                        'image'       => $first->exercise_image,
+                        'sets'        => $exerciseSets->map(fn ($set) => [
+                            'id'           => $set->id,
+                            'set_number'   => $set->set_number,
+                            'weight'       => $set->weight,
+                            'reps'         => $set->reps,
+                            'is_completed' => (bool) $set->is_completed,
+                        ])->values(),
                     ];
                 })
                 ->values();
 
             return [
-                'id' => $workout->id,
-                'date' => $workout->date,
+                'id'        => $workout->id,
+                'date'      => $workout->date,
                 'exercises' => $exercises,
             ];
         });
 
         return response()->json([
-            'user_id' => $id,
+            'user_id'  => $id,
             'workouts' => $result,
         ]);
     }
